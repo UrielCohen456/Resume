@@ -40,7 +40,7 @@ locals {
 }
 resource "aws_cloudfront_distribution" "resume" {
   origin {
-    domain_name = "${aws_s3_bucket.resume.bucket}.s3.amazonaws.com"
+    domain_name = "${aws_s3_bucket.resume.bucket}.s3.${var.region}.amazonaws.com"
     origin_access_control_id = aws_cloudfront_origin_access_control.resume.id
     origin_id   = local.s3_origin_id
   }
