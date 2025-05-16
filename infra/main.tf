@@ -35,5 +35,4 @@ resource "aws_s3_object" "resume_file" {
   key    = "resume.html"
   source = "${path.module}/../frontend/index.html"
   content_type = "text/html"
-  acl = "public-read"
 }
