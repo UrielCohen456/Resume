@@ -7,9 +7,4 @@ resource "aws_dynamodb_table" "visitor_counter" {
     name = "id"
     type = "S"
   }
-
-  attribute {
-    name = "count"
-    type = "N"
-  }
 }
