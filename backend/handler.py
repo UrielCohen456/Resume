@@ -29,7 +29,13 @@ def lambda_handler(event, context):
 
         return {
             'statusCode': 200,
-            'body': str(response['Attributes']['count'])
+            'body': str(response['Attributes']['count']),
+            'headers': {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': 'https://urielc.com',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Allow-Methods': 'OPTIONS,POST'
+            },
         }
 
     except Exception as e:
