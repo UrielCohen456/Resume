@@ -2,6 +2,11 @@ provider "aws" {
   region = var.region
 }
 
+provider "aws" {
+  alias = "us_east_1"
+  region = "us-east-1"
+}
+
 # Section: S3 Bucket
 
 resource "aws_s3_bucket" "resume" {
@@ -23,6 +28,60 @@ resource "aws_s3_object" "resume_file" {
   source = "${path.module}/../frontend/index.html"
   content_type = "text/html"
 }
+
+# Section: certificate
+
+resource "aws_acm_certificate" "cert" {
+  provider = aws.us_east_1
+  domain_name       = "urielc.com"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+resource "aws_route53_record" "cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
+      name  = dvo.resource_record_name
+      type  = dvo.resource_record_type
+      value = dvo.resource_record_value
+    }
+  }
+
+  zone_id = data.aws_route53_zone.primary.zone_id
+  name    = each.value.name
+  type    = each.value.type
+  records = [each.value.value]
+  ttl     = 60
+}
+
+resource "aws_acm_certificate_validation" "cert_validation" {
+  provider                = aws.us_east_1
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+}
+
+# Section: dns
+
+data "aws_route53_zone" "primary" {
+  name = "urielc.com"
+}
+
+resource "aws_route53_record" "root" {
+  zone_id = data.aws_route53_zone.primary.zone_id
+  name    = "urielc.com"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.resume_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.resume_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
 
 # Section: Cloudfront
 
@@ -77,7 +136,7 @@ resource "aws_cloudfront_distribution" "resume" {
 
   viewer_certificate {
     ssl_support_method = "sni-only"
-    acm_certificate_arn = "arn:aws:acm:us-east-1:356700923537:certificate/6a31a2de-13ed-4248-87f5-e0f3ca0a6697"
+    acm_certificate_arn = aws_acm_certificate_validation.cert_validation.certificate_arn
   }
 }
 
