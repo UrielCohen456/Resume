@@ -18,6 +18,8 @@ Simple python Lambda that uses DynamoDB to keep track and update the visitor cou
 
 ![diagram visualization](./Diagram.png)
 
+## The process
+
 1. Setting up the IAM role:
 In order to be able to use terraform to deploy and destroy my infra, I want to use github actions. To do so I must enable OIDC connection from github, such that aws allows github actions to assume my role and thus have access to AWS resources. 
 I followed [this guide from aws](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_oidc.html#idp_oidc_Create_GitHub) to create that role and identity provider and [this guide from github](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services)
@@ -27,11 +29,14 @@ First I had to manually create the s3 bucket that will house my terraform state.
 Then I created the terraform module to setup the backend to s3, along with creating the bucket for the resume html file and uploading it to it.
 Then create the deploy pipeline in github actions to apply the terraform.
 
-3. I then went on to first create the resume.html file, and then create the necessary s3 bucket for it and the cloudfront distribution to access it, since we don't want to access the bucket directly from the public.
+3. Setting up the frontend
+I then went on to first create the resume.html file, and then create the necessary s3 bucket for it and the cloudfront distribution to access it, since we don't want to access the bucket directly from the public.
 After that worked I went on to buy the DNS I wanted in route53 and create the necessary record to access it.
 
-4. Now all that was left was to create the python code for the lambda and write the terraform for the lambda, dynamodb that the lambda uses and the apigateway to allow access to this lambda on a post request.
+4. Setting up the backend
+Now all that was left was to create the python code for the lambda and write the terraform for the lambda, dynamodb that the lambda uses and the apigateway to allow access to this lambda on a post request.
 Once that worked all that was left was to change the existing cloudfront code to allow another origin on a specific url endpoint "/api".
 I also made sure that the deploy action listened for changes on the backend as well.
 
-5. To wrap things I added the simple javascript functionality on the frontend to access the api to retrieve the visitor count and change the cors settings on the lambda. Then finally everything worked together.
+5. Connecting it all together
+To wrap things I added the simple javascript functionality on the frontend to access the api to retrieve the visitor count and change the cors settings on the lambda. Then finally everything worked together.
