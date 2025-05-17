@@ -22,12 +22,13 @@ resource "aws_s3_bucket_public_access_block" "public" {
   restrict_public_buckets = true
 }
 
-resource "aws_s3_object" "resume_file" {
-  bucket = aws_s3_bucket.resume.bucket
-  key    = "resume.html"
-  source = "${path.module}/../frontend/index.html"
-  content_type = "text/html"
-}
+# resource "aws_s3_object" "resume_file" {
+#   bucket = aws_s3_bucket.resume.bucket
+#   key    = "resume.html"
+#   source = "${path.module}/../frontend/index.html"
+#   content_type = "text/html"
+#   etag = "${filemd5("${path.module}/../frontend/index.html")}"
+# }
 
 # Section: certificate
 

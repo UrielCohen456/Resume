@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   deploy:
-    name: Terraform Apply
+    name: Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +26,9 @@ jobs:
           role-to-assume: arn:aws:iam::356700923537:role/resume-challenge-terraform
           aws-region: eu-central-1
 
+      - name: Setup aws cli
+        uses: unfor19/install-aws-cli-action@master
+ 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         
@@ -36,3 +39,11 @@ jobs:
       - name: Terraform Apply
         working-directory: infra
         run: terraform apply -auto-approve 
+
+      - name: Copy all files to s3
+        run: aws s3 sync ./frontend s3://uriel-resume-challenge
+        shell: bash
+
+      # - name: Copy all files to s3
+      #   run: aws s3 sync . 
+      #   shell: bash
