@@ -38,6 +38,7 @@ resource "aws_cloudfront_origin_access_control" "resume" {
 locals {
   s3_origin_id = "S3Origin"
 }
+
 resource "aws_cloudfront_distribution" "resume" {
   origin {
     domain_name = "${aws_s3_bucket.resume.bucket}.s3.${var.region}.amazonaws.com"
@@ -46,6 +47,7 @@ resource "aws_cloudfront_distribution" "resume" {
   }
 
   aliases = ["urielc.com"]
+  
   enabled             = true
   default_root_object = "resume.html"
 
@@ -74,7 +76,7 @@ resource "aws_cloudfront_distribution" "resume" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = "arn:aws:acm:eu-central-1:356700923537:certificate/066d31bb-a7cb-4636-bcd3-3b9155878838"
   }
 }
 
