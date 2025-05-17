@@ -77,7 +77,7 @@ resource "aws_cloudfront_distribution" "resume" {
 
   viewer_certificate {
     ssl_support_method = "sni-only"
-    acm_certificate_arn = "arn:aws:acm:eu-central-1:356700923537:certificate/066d31bb-a7cb-4636-bcd3-3b9155878838"
+    acm_certificate_arn = "arn:aws:acm:us-east-1:356700923537:certificate/6a31a2de-13ed-4248-87f5-e0f3ca0a6697"
   }
 }
 
