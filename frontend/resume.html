@@ -16,8 +16,7 @@
     </p>
   </header>
 
-  <div id="visitor-count" style="font-family: sans-serif; font-size: 16px; margin-top: 1em; color: #555;"></div>
-
+  <div id="visitor-count" class="text-center text-lg mb-8"></div>
 
   <section class="mb-8">
     <h2 class="text-xl font-semibold text-blue-900 mb-2 border-b-4 border-black pb-1">About Me</h2>
@@ -96,8 +95,8 @@
       }
 
       const data = await response.json();
-      document.getElementById('visitor-count').innerText =
-        `You are visitor #${data}`;
+      document.getElementById('visitor-count').innerHTML =
+        `You are visitor #<span class="font-bold">${data}</span>`;
     } catch (error) {
       console.error('Failed to fetch visitor count:', error);
       document.getElementById('visitor-count').innerText = 'Could not load visitor count';
