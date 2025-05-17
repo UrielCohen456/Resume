@@ -45,6 +45,7 @@ resource "aws_cloudfront_distribution" "resume" {
     origin_id   = local.s3_origin_id
   }
 
+  aliases = ["urielc.com"]
   enabled             = true
   default_root_object = "resume.html"
 
