@@ -1,5 +1,6 @@
 locals {
   s3_origin_id = "S3Origin"
+  api_origin_id = "APIGatewayOrigin"
 }
 
 resource "aws_cloudfront_origin_access_control" "resume" {
@@ -11,16 +12,28 @@ resource "aws_cloudfront_origin_access_control" "resume" {
 }
 
 resource "aws_cloudfront_distribution" "resume" {
+  enabled             = true
+  default_root_object = "resume.html"
+
+  aliases = ["urielc.com"]
+  
   origin {
     domain_name = "${aws_s3_bucket.resume.bucket}.s3.${var.region}.amazonaws.com"
     origin_access_control_id = aws_cloudfront_origin_access_control.resume.id
     origin_id   = local.s3_origin_id
   }
 
-  aliases = ["urielc.com"]
-  
-  enabled             = true
-  default_root_object = "resume.html"
+  origin {
+    domain_name = "${aws_apigatewayv2_api.api.api_endpoint}"
+    origin_id   = local.api_origin_id
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
@@ -34,6 +47,22 @@ resource "aws_cloudfront_distribution" "resume" {
 
       cookies {
         forward = "none"
+      }
+    }
+  }
+
+  ordered_cache_behavior {
+    path_pattern           = "/api/*"
+    target_origin_id       = local.api_origin_id
+    viewer_protocol_policy = "https-only"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD", "OPTIONS"]
+
+    forwarded_values {
+      query_string = true
+      headers      = ["*"]
+      cookies {
+        forward = "all"
       }
     }
   }
