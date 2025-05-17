@@ -54,9 +54,13 @@ resource "aws_cloudfront_distribution" "resume" {
   ordered_cache_behavior {
     path_pattern           = "/api/*"
     target_origin_id       = local.api_origin_id
-    viewer_protocol_policy = "https-only"
+    viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
+
+    min_ttl = 0
+    default_ttl = 0
+    max_ttl = 0
 
     forwarded_values {
       query_string = true
