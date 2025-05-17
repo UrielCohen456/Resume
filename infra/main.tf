@@ -64,24 +64,6 @@ resource "aws_acm_certificate_validation" "cert_validation" {
   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
 
-# Section: dns
-
-data "aws_route53_zone" "primary" {
-  name = "urielc.com"
-}
-
-resource "aws_route53_record" "root" {
-  zone_id = data.aws_route53_zone.primary.zone_id
-  name    = "urielc.com"
-  type    = "A"
-
-  alias {
-    name                   = aws_cloudfront_distribution.resume_distribution.domain_name
-    zone_id                = aws_cloudfront_distribution.resume_distribution.hosted_zone_id
-    evaluate_target_health = false
-  }
-}
-
 
 # Section: Cloudfront
 
@@ -164,4 +146,22 @@ data "aws_iam_policy_document" "cloudfront_access" {
 resource "aws_s3_bucket_policy" "resume_policy" {
   bucket = aws_s3_bucket.resume.id
   policy = data.aws_iam_policy_document.cloudfront_access.json
+}
+
+# Section: dns
+
+data "aws_route53_zone" "primary" {
+  name = "urielc.com"
+}
+
+resource "aws_route53_record" "root" {
+  zone_id = data.aws_route53_zone.primary.zone_id
+  name    = "urielc.com"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.resume_distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.resume_distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
 }
