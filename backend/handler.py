@@ -12,7 +12,7 @@ logger.setLevel("INFO")
 def lambda_handler(event, context):
     try:
         # Initializing the table client
-        table_name = os.environ("TABLE_NAME")
+        table_name = os.environ["TABLE_NAME"]
         if not table_name:
             raise ValueError("Missing required environment variable TABLE_NAME")
         table = dynamodb_client.Table(table_name)

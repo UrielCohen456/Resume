@@ -4,8 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'frontend/**'
       - 'infra/**'
+      - 'frontend/**'
+      - 'backend/**'
 
 permissions:
   id-token: write
