@@ -64,7 +64,8 @@ resource "aws_cloudfront_distribution" "resume" {
 
     forwarded_values {
       query_string = true
-      headers      = ["None"]
+      # We want no headers
+      # headers      = ["*"]
       cookies {
         forward = "all"
       }
