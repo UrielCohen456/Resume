@@ -97,7 +97,7 @@
 
       const data = await response.json();
       document.getElementById('visitor-count').innerText =
-        `You are visitor #${data.count}`;
+        `You are visitor #${data}`;
     } catch (error) {
       console.error('Failed to fetch visitor count:', error);
       document.getElementById('visitor-count').innerText = 'Could not load visitor count';
