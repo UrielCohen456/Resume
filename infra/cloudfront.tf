@@ -24,7 +24,7 @@ resource "aws_cloudfront_distribution" "resume" {
   }
 
   origin {
-    domain_name = "${aws_apigatewayv2_api.api.api_endpoint}"
+    domain_name = replace(aws_apigatewayv2_api.api.api_endpoint, "https://", "")
     origin_id   = local.api_origin_id
     custom_origin_config {
       http_port              = 80
