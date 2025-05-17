@@ -47,9 +47,12 @@ resource "aws_iam_role_policy" "lambda_dynamodb" {
     Version = "2012-10-17",
     Statement = [
       {
+        Sid    = "ReadWriteVisitorTable",
         Effect = "Allow",
         Action = [
-          "dynamodb:UpdateItem"
+          "dynamodb:UpdateItem",
+          "dynamodb:GetItem",
+          "dynamodb:PutItem"
         ],
         Resource = aws_dynamodb_table.visitor_counter.arn
       }
