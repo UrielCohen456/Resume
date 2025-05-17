@@ -9,3 +9,9 @@ variable "bucket_name" {
   type        = string
   default = "uriel-resume-challenge"
 }
+
+variable "dynamodb_table_name" {
+  description = "Name of the table that hosts the counter record for website visits"
+  type        = string
+  default = "visitor-counter"
+}

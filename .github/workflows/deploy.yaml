@@ -44,6 +44,9 @@ jobs:
         run: aws s3 sync ./frontend s3://uriel-resume-challenge
         shell: bash
 
-      # - name: Copy all files to s3
-      #   run: aws s3 sync . 
+      # - name: Create an invalidation on cloudfront
       #   shell: bash
+      #   run: |
+      #     # Output contains the cloudfront distribution id
+      #     terraform output > output
+      #     aws s3 sync . 
